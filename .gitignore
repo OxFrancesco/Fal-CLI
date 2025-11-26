@@ -1,0 +1,13 @@
+node_modules/
+.env
+fal-cli.log
+output-*.png
+output-*.jpg
+output-*.jpeg
+output-*.mp4
+output-*.webp
+output-*.bin
+*.log
+.DS_Store
+.cursor/
+opentui/

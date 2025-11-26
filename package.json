@@ -1,0 +1,17 @@
+{
+  "name": "fal-cli",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@fal-ai/client": "^1.7.2",
+    "@opentui/core": "^0.1.49",
+    "dotenv": "^17.2.3"
+  }
+}
