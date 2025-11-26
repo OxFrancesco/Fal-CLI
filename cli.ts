@@ -99,7 +99,7 @@ function fuzzyScore(query: string, target: string): number {
     for (let i = 0; i < t.length && qi < q.length; i++) {
         if (t[i] === q[qi]) {
             score += (i === lastMatch + 1) ? 10 + (++consecutive * 5) : 5;
-            if (i === 0 || " -/".includes(t[i - 1])) score += 15;
+            if (i === 0 || " -/".includes(t[i - 1] ?? "")) score += 15;
             lastMatch = i;
             qi++;
             consecutive = i === lastMatch + 1 ? consecutive : 0;
@@ -127,13 +127,13 @@ async function fetchModels(): Promise<FalModel[]> {
         const response = await fetch("https://fal.ai/api/models?limit=1000");
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         
-        const data = await response.json();
+        const data = await response.json() as { items?: any[] };
         // Only include text-to-image and text-to-video models (not image-to-image, image-to-video, etc.)
         const supportedCategories = ["text-to-image", "text-to-video"];
         // Exclude models that require image input despite being categorized as text-to-*
         const excludePatterns = ["/edit", "/lora", "/img2img", "/inpaint", "/outpaint", "/upscale", "/controlnet", "/ip-adapter", "/redux", "/canny", "/depth"];
         
-        return (data.items || [])
+        return (data.items ?? [])
             .filter((m: any) => {
                 if (m.deprecated || m.removed || m.unlisted) return false;
                 if (m.kind !== "inference") return false;
@@ -216,13 +216,13 @@ function updateFocus() {
     focusableElements.forEach((el, i) => i === focusIndex ? el.focus() : el.blur());
     focusableBoxes.forEach((b, i) => i === focusIndex ? b.focus() : b.blur());
     
-    const hints: Record<number, string> = {
-        0: "Type to fuzzy search | TAB: next | ENTER: go to models",
-        1: "↑↓/jk: browse | ENTER: select | /: search | TAB: next",
-        2: "↑↓/jk: browse | ENTER: select | TAB: next",
-        3: "Type prompt | ENTER: generate | TAB: cycle",
-    };
-    if (footerText) footerText.content = t`${fg(colors.textMuted)(hints[focusIndex] + " | CTRL+C: quit")}`;
+    const hints = [
+        "Type to fuzzy search | TAB: next | ENTER: go to models",
+        "↑↓/jk: browse | ENTER: select | /: search | TAB: next",
+        "↑↓/jk: browse | ENTER: select | TAB: next",
+        "Type prompt | ENTER: generate | TAB: cycle",
+    ] as const;
+    if (footerText) footerText.content = t`${fg(colors.textMuted)((hints[focusIndex] ?? hints[0]) + " | CTRL+C: quit")}`;
 }
 
 async function handleGenerate() {
