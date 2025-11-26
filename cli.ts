@@ -17,7 +17,13 @@ import { appendFileSync, writeFileSync } from "fs";
 import { join } from "path";
 
 // Log file for debugging
-const LOG_FILE = join(process.cwd(), "fal-cli.log");
+import { mkdirSync, existsSync } from "fs";
+
+const LOG_DIR = join(process.cwd(), "logs");
+if (!existsSync(LOG_DIR)) {
+    mkdirSync(LOG_DIR, { recursive: true });
+}
+const LOG_FILE = join(LOG_DIR, `${new Date().toISOString().replace(/[:.]/g, "-")}.log`);
 writeFileSync(LOG_FILE, `=== FAL CLI Log Started ${new Date().toISOString()} ===\n`);
 
 function logToFile(msg: string) {
@@ -255,7 +261,7 @@ async function handleGenerate() {
             generateBtn.backgroundColor = colors.success;
             generateBtn.borderColor = colors.success;
             const ext = result.contentType.split("/")[1] || "bin";
-            addLog(`Saved: ${await downloadMedia(result.url, ext)}`);
+            addLog(`Saved: ${await downloadMedia(result.url, ext, model)}`);
         } else {
             btnText.content = " FAILED ";
             generateBtn.backgroundColor = colors.error;

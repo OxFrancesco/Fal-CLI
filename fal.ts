@@ -77,12 +77,21 @@ export async function generateMedia(
   }
 }
 
-export async function downloadMedia(url: string, extension: string): Promise<string> {
+export async function downloadMedia(url: string, extension: string, modelId: string): Promise<string> {
   const response = await fetch(url);
   const buffer = await response.arrayBuffer();
+  
+  // Create output folder with model name
+  const modelName = modelId.split('/').pop() || 'unknown';
+  const outputDir = path.join(process.cwd(), 'output', modelName);
+  
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true });
+  }
+  
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-  const filename = `output-${timestamp}.${extension}`;
-  const filepath = path.join(process.cwd(), filename);
+  const filename = `${timestamp}.${extension}`;
+  const filepath = path.join(outputDir, filename);
 
   fs.writeFileSync(filepath, Buffer.from(buffer));
   return filepath;

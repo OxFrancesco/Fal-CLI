@@ -64,15 +64,28 @@ Includes all Fal.ai text-to-image and text-to-video models:
 
 ## Output
 
-Generated files are saved to the current directory:
+Generated files are organized by model name:
 ```
-output-2024-01-15T10-30-00-000Z.png
-output-2024-01-15T10-35-00-000Z.mp4
+output/
+├── flux-2/
+│   └── 2024-01-15T10-30-00-000Z.png
+├── kling-video/
+│   └── 2024-01-15T10-35-00-000Z.mp4
+└── recraft-v3/
+    └── 2024-01-15T10-40-00-000Z.png
+```
+
+## Logs
+
+Session logs are saved in the `logs/` folder:
+```
+logs/
+└── 2024-01-15T10-30-00-000Z.log
 ```
 
 ## Troubleshooting
 
-Check `fal-cli.log` for detailed logs if something fails.
+Check the latest file in `logs/` for detailed logs if something fails.
 
 ## License
 
